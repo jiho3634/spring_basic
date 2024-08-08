@@ -1,0 +1,3 @@
+// 멀티모듈로 빌드시에 rootProject 가 어떤 것인지를 명시
+// 우리는 단일모듈이다.
+rootProject.name = 'basic'

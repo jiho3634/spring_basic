@@ -1,0 +1,33 @@
+#   properties 를 yml 로 변경.
+
+server:
+  port: 8081
+
+spring:
+  mvc:
+#    SpringBoot2.4 이상에서는 기본적으로 PathPatternParser 를 사용하고 있는데,
+#    springfox 와 같은 일부 라이브러리에서는 해당 pathPattern rule 과 충돌나는 경우가 path 방식 변경
+    matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/basic
+    username: root
+    password: 1234
+  jpa:
+#    mariadb 라고 쓰면 에러
+    database: mysql
+#    innoDB 사용 설정
+    database-platform:  org.hibernate.dialect.MariaDBDialect
+#    스키마는 직접 생성해야함.
+    generate-ddl: true
+#    jpa 의 구현체.
+    hibernate:
+#      create 옵션은 매번 table 을 drop 후 재생성
+#      update 옵션은 변경사항만 alter 를 적용하고 기존의 데이터 유지
+#      변경사항 중에 주로 추가사항만 반영하고, 삭제나 수정은 반영하지 않을 수 있다.
+#      validate 는 실제 DB 와의 차이만을 check
+      ddl-auto: update
+#    console 에 ddl, dml 출력
+    show_sql: true
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml

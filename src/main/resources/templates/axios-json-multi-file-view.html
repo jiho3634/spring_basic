@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+
+<body>
+    <form id="formId">
+        name<label for="name"></label><input type="text" name="name" id="name"><br>
+        email<label for="email"></label><input type="text" name="email" id="email"><br>
+        password<label for="password"></label><input type="text" name="password" id="password"><br>
+        신분증<input type="file" name="file" id="file" multiple><br>
+        <button type="submit" class="btn btn-secondary">제출</button>
+    </form>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById('formId').addEventListener('submit',
+            async function(event) {
+                event.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                const hello = {name:name, email:email, password:password};
+                const helloJson = JSON.stringify(hello);
+
+                const fileInput = document.getElementById('file');
+                const files = fileInput.files;
+
+                const formData = new FormData();
+                formData.append('hello', new Blob([helloJson, {type:"application/json"}]));
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files', files[i]);
+                }
+
+                try {
+                    const response = await axios.post(
+                    'http://localhost:8080/hello/axios-json-multi-file-view'
+                    , formData
+                    , {headers : {'Content-Type': 'multipart/form-data'}});
+                    console.log(response.data);
+                } catch (e) {
+                    console.log(e.message);
+                }
+            })
+    </script>
+</body>
+
+</html>

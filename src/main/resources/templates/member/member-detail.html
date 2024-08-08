@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원상세조회</title>
+</head>
+
+<body>
+    <div th:replace="member/header :: headerFragment"></div>
+    <table>
+        <tr><th>ID : </th><td th:text="${memberDetailResDto.id}"></td></tr>
+        <tr><th>name : </th><td th:text="${memberDetailResDto.name}"></td></tr>
+        <tr><th>email : </th><td th:text="${memberDetailResDto.email}"></td></tr>
+        <tr><th>password : </th><td th:text="${memberDetailResDto.password}"></td></tr>
+        <tr><th>createdTime : </th><td th:text="${memberDetailResDto.createdTime}"></td></tr>
+    </table>
+</body>
+
+</html>

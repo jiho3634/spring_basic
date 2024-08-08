@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+
+<body>
+    <form id="formId">
+        name<label for="name"></label><input type="text" name="name" id="name"><br>
+        email<label for="email"></label><input type="text" name="email" id="email"><br>
+        <div id="grades">
+            <p>성적 정보 : </p>
+            <div class="grade">
+                수업명 : <input type="text" name="className"><br>
+                점수 : <input type="text" name="point"><br>
+            </div>
+        </div>
+        <button onclick="addGrade()">성적 추가</button>
+        <button type="submit" class="btn btn-secondary">제출</button>
+    </form>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function addGrade() {
+            const gradesDiv = document.getElementById('grades');
+            gradesDiv.innerHTML += `<div class="grade">
+                수업명 : <input type="text" name="className"><br>
+                점수 : <input type="text" name="point"><br>
+            </div>`;
+        }
+        document.getElementById('formId').addEventListener('submit',
+            async function(event) {
+                event.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const score = document.getElementById('score').value;
+                try {
+                    const response = await axios.post('http://localhost:8080/hello/axios-nested-json-view',
+                    {name:name, email:email, {subject:subject, score:score});
+                    console.log(response.data);
+                } catch (e) {
+                    console.log(e.message);
+                }
+            })
+    </script>
+</body>
+
+</html>

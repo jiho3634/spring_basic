@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+
+<body>
+    <form id="formId">
+        name<input type="text" name="name" id="name"><br>
+        email<input type="text" name="email" id="email"><br>
+        password<input type="text" name="password" id="password"><br>
+        신분증<input type="file" name="file" id="file"><br>
+        <button type="submit" class="btn btn-secondary">제출</button>
+    </form>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById('formId').addEventListener('submit',
+            async function(event) {
+                event.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                const hello = {name:name, email:email, password:password};
+                const helloJson = JSON.stringify(hello);
+
+                // file 은 배열 형태로 get 된다.
+                const fileInput = document.getElementById('file');
+                const file = fileInput.files[0];
+
+                //  json 과 formData 를 같이 써서 파일을 보내겠다!
+                const formData = new FormData();
+
+                //  json 문자열로 formData 에 추가하는 방법
+                //  formData.append('hello', helloJson);
+
+                //  new Blob([직렬화된 json, 타입])
+                //  Blob 함수는 데이터형을 지정/변환할떄 사용
+                //  Blob 객체 사용: 데이터가 파일처럼 전송되므로 서버에서 추가 처리가 필요.
+                //  파일 업로드와 유사한 방식으로 처리할 때 유용.
+                formData.append('hello', new Blob([helloJson, {type:"application/json"}]));
+                formData.append('file', file);
+
+                try {
+                    // file 때문에 추가함. {headers : {'Content-Type': 'multipart/form-data'}}
+                    const response = await axios.post(
+                    'http://localhost:8080/hello/axios-json-file-view'
+                    , formData
+                    , {headers : {'Content-Type': 'multipart/form-data'}});
+                    console.log(response.data);
+                } catch (e) {
+                    console.log(e.message);
+                }
+            })
+    </script>
+</body>
+
+</html>

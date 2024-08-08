@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+
+<body>
+    <form id="formId">
+        name<input type="text" name="name" id="name"><br>
+        email<input type="text" name="email" id="email"><br>
+        password<input type="text" name="password" id="password"><br>
+        <button type="submit" class="btn btn-secondary">제출</button>
+    </form>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById('formId').addEventListener('submit',
+            async function(event) {
+                event.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                try {
+                    const response = await axios.post('http://localhost:8080/hello/axios-json-view',
+                    {name:name, email:email, password:password});
+                    console.log(response.data);
+                } catch (e) {
+                    console.log(e.message);
+                }
+            })
+    </script>
+</body>
+
+</html>

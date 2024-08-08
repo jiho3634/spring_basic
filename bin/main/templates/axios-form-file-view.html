@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+
+<body>
+    <form id="formId">
+        name<input type="text" name="name" id="name">
+        email<input type="text" name="email" id="email">
+        password<input type="text" name="password" id="password">
+        신분증<input type="file" name="file" id="file">
+        <button type="submit" class="btn btn-secondary">제출</button>
+    </form>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById('formId').addEventListener('submit',
+            async function(event) {
+                event.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                // file 은 배열 형태로 get 된다.
+                const fileInput = document.getElementById('file');
+                const file = fileInput.files[0];
+
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('file', file);
+
+                try {
+                    // file 때문에 추가함. {headers : {'Content-Type': 'multipart/form-data'}}
+                    const response = await axios.post('http://localhost:8080/hello/axios-form-file-view', formData, {headers : {'Content-Type': 'multipart/form-data'}});
+                    console.log(response.data);
+                } catch (e) {
+                    console.log(e.message);
+                }
+            })
+    </script>
+</body>
+
+</html>

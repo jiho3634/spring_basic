@@ -1,0 +1,82 @@
+// maven 은 pom.xml
+// maven 과 gradle 중 택 1 하여 사용하는 경향이 있다.
+
+// java build 에 필요한 플러그인 설정
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.11'
+	//의존성 관리 툴 버전
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.beyond'
+
+// 빌드된 jar 파일의 버전명
+// snapshot : 실험용버전
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '11'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	// 의존성을 가져오는 대상 저장소 (repository)
+	// ex) 우분투 apt-get 의 레포지토리-저장소, 목록을 update 하는 것과 같다.
+	// nexus 설치형 repository 사용하기도 함.
+	mavenCentral()
+}
+
+// starter 종속성은 일반적으로 별도의 버전관리가 필요없고, 버전에 따라 호환성을 맞춰줌.
+dependencies {
+
+	//DB 연결 및 관리를 위한 의존성 : 개발된순 jdbc -> mybatis -> jpa -> springDataJpa
+
+	//	mariadb 클라이언트 추가
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+
+	//	mybatis 관련 의존성 추가
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// 타임리프 (템플릿 엔진 - JSP, 타임리프 등) 의존성 => SSR (Server Side Rendering)
+	// SSR : 서버에서 화면과 데이터를 동시에 보내주는 구조, CSR (Client Side Rendering) 과 상반되는 구조.
+	// CSR : 화면 드라이브에서 화면을 따로 보내주고 (S3), 화면을 통해서 서버에 데이터를 요청하는 구조 (EC2)
+	// 게시판(SSR-타임리프), 주문서비스(CSR, vue 와 함께)
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// implementation 키워드는 컴파일 시점과 런타임 시점에 모두 필요한 라이브러리임을 명시
+	// compileOnly 는 컴파일 시점에서 필요한 라이브러리임을 명시
+	// runTimeOnly : class 파일 만들 때 참조 x, 최종 jar 파일 만들 때 포함.
+	// jar 파일 : class + 기타 의존성 묶음 => 실행 가능한 상태
+	// implementation = compileOnly + runTimeOnly
+	// 코드의 효율성을 위해.
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//	jsp 를 위한 라이브러리 추가
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+
+	//	jstl 문법을 사용하기 위한 의존성 추가
+	implementation 'javax.servlet:jstl'
+
+	// Swagger 의존성 추가
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+	// starter 종속성이 없는 애들은 일반적으로 버전을 명시해줘야하는데 얘네는 왜 없는지 모르겠당.
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
